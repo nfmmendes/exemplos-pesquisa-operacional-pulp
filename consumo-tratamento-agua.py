@@ -1,9 +1,11 @@
 import pulp as lp
 import pandas as pd
 
-### Dados do problema
-## No livro o problema aparece apenas com a descricao algebrica, sem valores
-## numericos
+"""
+ Dados do problema
+ No livro o problema aparece apenas com a descricao algebrica, sem valores
+ numericos
+"""
 df = pd.DataFrame(
     data=[[3, 7, 6, 5], [2, 6, 1, 3], [5, 3, 4]],
     columns=["Tratamento 1", "Tratamento 2", "Tratamento 3", "Tolerancia"],
@@ -33,9 +35,11 @@ model += lp.lpSum(
 model += lp.lpSum(consumo_por_tratamento[:]) >= demanda
 model += lp.lpSum(consumo_por_tratamento[:]) <= vazao
 
-## O modelo no livro considera a vazao maxima para calcular a quantidade final de poluentes,
-## por volume mas deveria considerar o consumo, caso contrario podera aceitar niveis de
-## poluentes maiores que o aceitavel.
+"""
+O modelo no livro considera a vazao maxima para calcular a quantidade final de poluentes,
+por volume mas deveria considerar o consumo, caso contrario podera aceitar niveis de
+poluentes maiores que o aceitavel.
+"""
 model += lp.lpSum(
     consumo_por_tratamento[t] * df.iloc[0, t] for t in range(0, len(df.columns) - 1)
 ) <= df["Tolerancia"]["A"] * lp.lpSum(consumo_por_tratamento[:])
